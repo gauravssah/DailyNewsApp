@@ -18,7 +18,7 @@ export class NewsItems extends Component {
                     <div className="card-body">
                         <h5 className="card-title">{tital}</h5>
                         <p className="card-text">{description}</p>
-                        <p className="card-text text-warning"><small className="text-danger ">By- {!auther ? "Unknown" : auther} on {new Date(date).toLocaleString()}</small></p>
+                        <p className="card-text text-warning"><small className="text-danger ">By- {!auther ? "Unknown" : auther} on {new Date(date).toUTCString()}</small></p>
                         <Link to={newsUrl} target='_blank' className="btn btn-sm btn-primary">Read More</Link>
                     </div>
                 </div>
