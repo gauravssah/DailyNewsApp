@@ -15,7 +15,7 @@ export default class App extends Component {
     return (
       <div>
 
-        <Router basename='DailyNewsApp' >
+        <Router basename='/DailyNewsApp' >
 
           <NavBar />
 
