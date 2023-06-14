@@ -20,3 +20,8 @@ nav.navbar {
 .btn-primary:hover {
   border: 1px solid black !important;
 }
+
+
+.card-img .card-img-bottom .card-img-top {
+  max-height: 240px !important;
+}
