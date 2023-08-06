@@ -37,7 +37,7 @@ export class News extends Component {
             },
             "author": "Abigail Summerville, Milana Vinn, David Carnevali",
             "title": "Exclusive: UBS nears major investment bank restructuring - Reuters",
-            "description": "UBS Group AG <a href=\"https://www.reuters.com/markets/companies/UBSG.S\" target=\"_blank\">(UBSG.S)</a> is poised to make sweeping changes to the senior ranks of its investment banking division globally as soon as Monday, marking a new milestone in the process o…",
+            "description": `"UBS Group AG https://www.reuters.com/markets/companies/UBSG.S\" target=\"_blank\">(UBSG.S)</a> is poised to make sweeping changes to the senior ranks of its investment banking division globally as soon as Monday, marking a new milestone in the process o…"`,
             "url": "https://www.reuters.com/business/finance/ubs-nears-major-investment-bank-restructuring-sources-2023-08-04/",
             "urlToImage": "https://www.reuters.com/resizer/KBxse5tvTTUwMj6V4PGMzZ7CqhE=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/JEUUCAZE5JM2ZJG5LQRWLOR2SI.jpg",
             "publishedAt": "2023-08-04T23:52:00Z",
@@ -270,7 +270,6 @@ export class News extends Component {
 
     constructor() {
         super()
-        console.log("i am from news")
         this.state = {
             articles: this.articles,
             loading: false
@@ -285,19 +284,14 @@ export class News extends Component {
 
                 <h2 className='my-3'>DailyNews - Top HeadLines</h2>
 
-                <div className="row mb-4">
-                    <div className="col md-3">
-                        <NewsItem title="news title" description="news desc" imageurl="https://www.gannett-cdn.com/authoring/authoring-images/2023/08/04/USAT/70532935007-ap-google-news-automation.jpg?auto=webp&crop=4114,2324,x0,y209&format=pjpg&width=1200" newsUrl="todowork" />
-                    </div>
-                    <div className="col md-3">
-                        <NewsItem title="news title" description="news desc" />
-                    </div>
-                    <div className="col md-3">
-                        <NewsItem title="news title" description="news desc" />
-                    </div>
-                    <div className="col md-3">
-                        <NewsItem title="news title" description="news desc" />
-                    </div>
+                <div className="row mb-4" >
+                    {this.state.articles.map((elements) => {
+                        return <div className="col md-3 my-3" key={elements.url}>
+                            <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage} newsUrl={elements.url} />
+                        </div>
+                    })}
+
+
                 </div>
 
             </div>
