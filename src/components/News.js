@@ -277,6 +277,18 @@ export class News extends Component {
     }
 
 
+    async componentDidMount() {
+        let url = "https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=809ff72368874be4ab94ce7845ea6708";
+        let data = await fetch(url);
+        let parsedData = await data.json();
+        console.log(parsedData);
+
+        this.setState({
+            articles: parsedData.articles
+        })
+    }
+
+
 
     render() {
         return (
