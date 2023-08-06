@@ -280,11 +280,11 @@ export class News extends Component {
 
     render() {
         return (
-            <div className='container my-3' >
+            <div className='container my-3 ' >
 
                 <h2 className='my-3'>DailyNews - Top HeadLines</h2>
 
-                <div className="row mb-4" >
+                <div className="row mb-4 d-flex justify-content-center" >
                     {this.state.articles.map((elements) => {
                         return <div className="col md-3 my-3" key={elements.url}>
                             <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage} newsUrl={elements.url} />
