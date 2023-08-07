@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
+import Spinner from './Spinner';
+
 
 export class News extends Component {
 
@@ -275,42 +277,44 @@ export class News extends Component {
             loading: false,
             page: 1,
             pagesize: 8,
+            apiKay: "809ff72368874be4ab94ce7845ea6708"
         }
     }
 
     async componentDidMount() {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=809ff72368874be4ab94ce7845ea6708&page=${this.state.page}&pagesize=${this.state.pagesize}`;
+        let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${this.state.apiKay}&page=${this.state.page}&pagesize=${this.state.pagesize}`;
+        this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
         this.setState({
             articles: parsedData.articles,
-            totalResults: parsedData.totalResults
+            totalResults: parsedData.totalResults,
+            loading: false,
         })
     }
 
     handalPrev = async () => {
-        console.log("previous")
-        let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=809ff72368874be4ab94ce7845ea6708&page=${this.state.page - 1}&pagesize=${this.state.pagesize}`;
+        let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${this.state.apiKay}&page=${this.state.page - 1}&pagesize=${this.state.pagesize}`;
+        this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
         this.setState({
             page: this.state.page - 1,
             articles: parsedData.articles,
+            loading: false,
         })
     }
 
     handalNext = async () => {
-        console.log("handalNext")
-
-        if (this.state.page + 1 > Math.ceil(this.state.totalResults / this.state.pagesize)) {
-
-        } else {
-            let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=809ff72368874be4ab94ce7845ea6708&page=${this.state.page + 1}&pagesize=${this.state.pagesize}`;
+        if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.state.pagesize))) {
+            let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${this.state.apiKay}&page=${this.state.page + 1}&pagesize=${this.state.pagesize}`;
+            this.setState({ loading: true })
             let data = await fetch(url);
             let parsedData = await data.json();
             this.setState({
                 page: this.state.page + 1,
                 articles: parsedData.articles,
+                loading: false,
             })
         }
 
@@ -322,8 +326,12 @@ export class News extends Component {
 
                 <h2 className='my-3 text-center'>DailyNews - Top HeadLines</h2>
 
+                {this.state.loading && <Spinner />}
+
+
+
                 <div className="row mb-4 " >
-                    {this.state.articles?.map((elements) => {
+                    {!this.state.loading && this.state.articles?.map((elements) => {
 
                         if (elements.description === null) {
                             elements.description = "Description Not Available..."
@@ -340,10 +348,10 @@ export class News extends Component {
                     })}
                 </div>
 
-                <div className="container d-flex justify-content-between mb-5" >
+                {!this.state.loading && <div className="container d-flex justify-content-between mb-5" >
                     <button type="button" disabled={this.state.page <= 1} className="btn btn-warning" onClick={this.handalPrev} style={{ fontWeight: "bold" }}>&larr; Previous</button>
                     <button type="button" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.state.pagesize)} className="btn btn-warning" onClick={this.handalNext} style={{ fontWeight: "bold" }}>Next &rarr;</button>
-                </div>
+                </div>}
 
             </div>
         )
