@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
-import Spinner from './Spinner';
+import Spinner from './Spinner'
+import PropTypes from 'prop-types'
+
 
 
 export class News extends Component {
@@ -269,6 +271,17 @@ export class News extends Component {
 
     // ]
 
+    static defaultProps = {
+        country: "in",
+        pagesize: 8,
+        category: "general",
+    }
+
+    static propTypes = {
+        country: PropTypes.string,
+        pagesize: PropTypes.number,
+        category: PropTypes.string
+    }
 
     constructor() {
         super()
@@ -276,13 +289,14 @@ export class News extends Component {
             articles: [],
             loading: false,
             page: 1,
-            pagesize: 8,
-            apiKay: "809ff72368874be4ab94ce7845ea6708"
+            // apiKay: "809ff72368874be4ab94ce7845ea6708"
+            apiKay: "74cced90f2fe4c18b6b482f0cca82a9b"
+
         }
     }
 
     async componentDidMount() {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${this.state.apiKay}&page=${this.state.page}&pagesize=${this.state.pagesize}`;
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.state.apiKay}&page=${this.state.page}&pagesize=${this.props.pagesize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
@@ -294,7 +308,7 @@ export class News extends Component {
     }
 
     handalPrev = async () => {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${this.state.apiKay}&page=${this.state.page - 1}&pagesize=${this.state.pagesize}`;
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.state.apiKay}&page=${this.state.page - 1}&pagesize=${this.props.pagesize}`;
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
@@ -306,8 +320,10 @@ export class News extends Component {
     }
 
     handalNext = async () => {
-        if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.state.pagesize))) {
-            let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${this.state.apiKay}&page=${this.state.page + 1}&pagesize=${this.state.pagesize}`;
+
+
+        if (!(this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pagesize))) {
+            let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.state.apiKay}&page=${this.state.page + 1}&pagesize=${this.props.pagesize}`;
             this.setState({ loading: true })
             let data = await fetch(url);
             let parsedData = await data.json();
@@ -320,15 +336,18 @@ export class News extends Component {
 
     }
 
+    textCaptlize = (word) => {
+        let lowerCase = word.toLowerCase();
+        return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
+    }
+
     render() {
         return (
             <div className='container my-3 ' >
 
-                <h2 className='my-3 text-center'>DailyNews - Top HeadLines</h2>
+                <h2 className='my-3 text-center'>{this.props.category === "general" ? "DailyNews - Top Headlines" : `DailyNews - Top Headlines of ${this.textCaptlize(this.props.category)}`} </h2>
 
                 {this.state.loading && <Spinner />}
-
-
 
                 <div className="row mb-4 " >
                     {!this.state.loading && this.state.articles?.map((elements) => {
@@ -343,14 +362,14 @@ export class News extends Component {
 
 
                         return <div className="col md-3 my-3 d-flex justify-content-center" key={elements.url}>
-                            <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} />
+                            <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} />
                         </div>
                     })}
                 </div>
 
                 {!this.state.loading && <div className="container d-flex justify-content-between mb-5" >
                     <button type="button" disabled={this.state.page <= 1} className="btn btn-warning" onClick={this.handalPrev} style={{ fontWeight: "bold" }}>&larr; Previous</button>
-                    <button type="button" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.state.pagesize)} className="btn btn-warning" onClick={this.handalNext} style={{ fontWeight: "bold" }}>Next &rarr;</button>
+                    <button type="button" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pagesize)} className="btn btn-warning" onClick={this.handalNext} style={{ fontWeight: "bold" }}>Next &rarr;</button>
                 </div>}
 
             </div>
