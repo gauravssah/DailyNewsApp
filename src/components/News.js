@@ -283,8 +283,8 @@ export class News extends Component {
         category: PropTypes.string
     }
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             articles: [],
             loading: false,
@@ -293,6 +293,14 @@ export class News extends Component {
             apiKay: "74cced90f2fe4c18b6b482f0cca82a9b"
 
         }
+
+        if (this.props.category === "general") {
+            document.title = "DailyNews: Your Source for Real-Time Updates on Politics, Business, Technology, Sports, and Entertainment"
+        } else {
+            document.title = `${this.textCaptlize(this.props.category)} - DailyNews`;
+        }
+
+
     }
 
     async componentDidMount() {
@@ -345,7 +353,8 @@ export class News extends Component {
         return (
             <div className='container my-3 ' >
 
-                <h2 className='my-3 text-center'>{this.props.category === "general" ? "DailyNews - Top Headlines" : `DailyNews - Top Headlines of ${this.textCaptlize(this.props.category)}`} </h2>
+                <h2 className='my-3 text-center'>{this.props.category === "general" ? "DailyNews - Top Headlines" : `DailyNews - Top Headlines of
+                 ${this.textCaptlize(this.props.category)}`} </h2>
 
                 {this.state.loading && <Spinner />}
 
@@ -360,9 +369,8 @@ export class News extends Component {
                             elements.description = "Title Not Available..."
                         }
 
-
                         return <div className="col md-3 my-3 d-flex justify-content-center" key={elements.url}>
-                            <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} />
+                            <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} source={elements.source.name} />
                         </div>
                     })}
                 </div>
