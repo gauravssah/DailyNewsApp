@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import NewsItem from './NewsItem'
 import Spinner from './Spinner'
 import PropTypes from 'prop-types'
-
+import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteSpinner from './InfiniteSpinner';
 
 
 export class News extends Component {
@@ -289,10 +290,9 @@ export class News extends Component {
             articles: [],
             loading: false,
             page: 1,
-            // apiKay: "809ff72368874be4ab94ce7845ea6708"
-            apiKay: "74cced90f2fe4c18b6b482f0cca82a9b",
+            apiKay: "809ff72368874be4ab94ce7845ea6708",
+            // apiKay: "74cced90f2fe4c18b6b482f0cca82a9b",
             totalResults: 0,
-
         }
 
         if (this.props.category === "general") {
@@ -318,17 +318,22 @@ export class News extends Component {
     }
 
     async componentDidMount() {
-        this.updateNews()
+        this.updateNews();
     }
 
-    handalPrev = async () => {
-        this.setState({ page: this.state.page - 1 })
-        this.updateNews()
-    }
+    fetchMoreData = async () => {
+        this.setState({ page: this.state.page + 1 });
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.state.apiKay}&page=${this.state.page}&pagesize=${this.props.pagesize}`;
 
-    handalNext = async () => {
-        this.setState({ page: this.state.page + 1 })
-        this.updateNews()
+        let data = await fetch(url);
+        let parsedData = await data.json();
+        console.log(parsedData)
+        this.setState({
+            articles: this.state.articles.concat(parsedData.articles),
+            totalResults: parsedData.totalResults,
+
+        })
+
     }
 
     textCaptlize = (word) => {
@@ -338,36 +343,49 @@ export class News extends Component {
 
     render() {
         return (
-            <div className='container my-3 ' >
+            < >
 
                 <h2 className='my-3 text-center'>{this.props.category === "general" ? "DailyNews - Top Headlines" : `DailyNews - Top Headlines of
                  ${this.textCaptlize(this.props.category)}`} </h2>
 
                 {this.state.loading && <Spinner />}
 
-                <div className="row mb-4 " >
-                    {!this.state.loading && this.state.articles?.map((elements) => {
+                <InfiniteScroll
+                    dataLength={this.state.articles.length}
+                    next={this.fetchMoreData}
+                    hasMore={this.state.articles.length !== this.state.totalResults}
+                    loader={<InfiniteSpinner />}
+                >
 
-                        if (elements.description === null) {
-                            elements.description = "Description Not Available..."
-                        }
+                    <div className="container">
 
-                        if (elements.title === null) {
-                            elements.description = "Title Not Available..."
-                        }
+                        <div className="row mb-4 " >
+                            {this.state.articles?.map((elements) => {
 
-                        return <div className="col md-3 my-3 d-flex justify-content-center" key={elements.url}>
-                            <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} source={elements.source.name} />
+                                if (elements.description === null) {
+                                    elements.description = "Description Not Available..."
+                                }
+
+                                if (elements.title === null) {
+                                    elements.description = "Title Not Available..."
+                                }
+
+                                return <div className="col md-3 my-3 d-flex justify-content-center" key={elements.url}>
+                                    <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} source={elements.source.name} />
+                                </div>
+                            })}
                         </div>
-                    })}
-                </div>
 
-                {!this.state.loading && <div className="container d-flex justify-content-between mb-5" >
-                    <button type="button" disabled={this.state.page <= 1} className="btn btn-warning" onClick={this.handalPrev} style={{ fontWeight: "bold" }}>&larr; Previous</button>
-                    <button type="button" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / this.props.pagesize)} className="btn btn-warning" onClick={this.handalNext} style={{ fontWeight: "bold" }}>Next &rarr;</button>
-                </div>}
+                    </div>
 
-            </div>
+                </InfiniteScroll>
+
+
+
+
+
+
+            </>
         )
     }
 }
