@@ -290,7 +290,8 @@ export class News extends Component {
             loading: false,
             page: 1,
             // apiKay: "809ff72368874be4ab94ce7845ea6708"
-            apiKay: "74cced90f2fe4c18b6b482f0cca82a9b"
+            apiKay: "74cced90f2fe4c18b6b482f0cca82a9b",
+            totalResults: 0,
 
         }
 
@@ -328,7 +329,6 @@ export class News extends Component {
     handalNext = async () => {
         this.setState({ page: this.state.page + 1 })
         this.updateNews()
-
     }
 
     textCaptlize = (word) => {
