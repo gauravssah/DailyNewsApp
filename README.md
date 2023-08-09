@@ -1,71 +1,65 @@
-# DailyNews App
 
+# DailyNewsApp using React
 
-
-## Description
-
-The Daily NewsApp is a web application built using React that allows users to stay updated with the latest news from various categories such as politics, business, technology, sports, and entertainment. The app fetches real-time news data from the [NewsAPI](https://newsapi.org/) and presents it in an organized and user-friendly format.
+This is a simple news app built using React that fetches and displays top headlines from various news sources. The app utilizes the NewsAPI to retrieve news articles based on the selected category and country.
 
 ## Features
 
-- Browse top headlines from different categories.
-- Pagination support for easy navigation through articles.
-- Responsive design for seamless usage on various devices.
+- Fetches and displays top news headlines based on the chosen category and country.
+- Implements infinite scrolling to load more news articles as the user scrolls.
+- Shows a loading spinner while fetching data from the API.
+- Provides a link to read the full article for each news item.
 
+## Setup and Installation
 
+1. Clone the repository or download the source code.
+2. Open a terminal and navigate to the project directory.
+3. Run the following command to install the required dependencies:
 
-## Installation
+```bash
+npm install
+```
 
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/gauravssah/DailyNewsApp.git
-   ```
+4. Create an account on [NewsAPI](https://newsapi.org/) and obtain an API key.
+5. Replace the placeholder `"YOUR_API_KEY"` in the `News.js` file with your actual NewsAPI key:
 
-2. Navigate to the project directory:
-   ```sh
-   cd DailyNewsApp
-   ```
+```javascript
+const apiKay = "YOUR_API_KEY";
+```
 
-3. Install the required dependencies:
-   ```sh
-   npm install
-   ```
+6. Start the development server by running the following command:
 
-4. Create a file named `.env.local` in the project root and add your NewsAPI API key:
-   ```env
-   REACT_APP_NEWS_API_KEY=your-api-key
-   ```
+```bash
+npm start
+```
 
-5. Start the development server:
-   ```sh
-   npm start
-   ```
-
-6. Open your web browser and access the app at `http://localhost:3000`.
+The app should now be running on `http://localhost:3000`.
 
 ## Usage
 
-- Select a category from the navigation menu to view top headlines from that category.
-- Click on a news article to read the full story on the source website.
-- Navigate through pages using the "Previous" and "Next" buttons at the bottom.
+1. Upon opening the app, you will see a list of top headlines in the selected category (default is "general") and country (default is "in").
+2. Scroll down to load more news articles using infinite scrolling.
+3. Click on any news item to read the full article on the source website.
 
-## Technologies Used
+## Configuration
+
+You can customize the behavior of the app by modifying the following props in the `News.js` file:
+
+- `country`: Set the desired country code for news articles (default: "in").
+- `pagesize`: Set the number of news articles to load per page (default: 8).
+- `category`: Set the news category (default: "general"). Available categories: "business", "entertainment", "health", "science", "sports", "technology".
+
+## Dependencies
 
 - React
 - PropTypes
-- NewsAPI
+- react-infinite-scroll-component
 
-## Contributing
+## Acknowledgments
 
-Contributions are welcome! If you'd like to contribute to the Daily News App, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and commit them with descriptive messages.
-4. Push your changes to your forked repository.
-5. Create a pull request detailing your changes.
+- NewsAPI for providing the news data.
+- Spinner and InfiniteSpinner components for visual loading indicators.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
-
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
