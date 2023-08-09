@@ -290,8 +290,10 @@ export class News extends Component {
             articles: [],
             loading: false,
             page: 1,
-            apiKay: "809ff72368874be4ab94ce7845ea6708",
+            apiKay: "f72b5e7032864ee38a21559ab0561744",
+            // apiKay: "809ff72368874be4ab94ce7845ea6708",
             // apiKay: "74cced90f2fe4c18b6b482f0cca82a9b",
+            // apiKay: "05332ad97bac4326a5f9982c84674662",
             totalResults: 0,
         }
 
@@ -309,12 +311,14 @@ export class News extends Component {
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
-        console.log(parsedData)
+        console.log("from updatenews " + url)
         this.setState({
             articles: parsedData.articles,
             totalResults: parsedData.totalResults,
             loading: false,
         })
+
+        // console.log("from updatenews length " + this.state.articles.length)
     }
 
     async componentDidMount() {
@@ -333,7 +337,8 @@ export class News extends Component {
             totalResults: parsedData.totalResults,
 
         })
-
+        // console.log("from fetchMoreData length " + this.state.articles.length)
+        // console.log("from fetchMoreData totalResults - " + this.state.totalResults)
     }
 
     textCaptlize = (word) => {
@@ -351,10 +356,16 @@ export class News extends Component {
                 {this.state.loading && <Spinner />}
 
                 <InfiniteScroll
-                    dataLength={this.state.articles.length}
+                    dataLength={this.state.articles?.length}
                     next={this.fetchMoreData}
-                    hasMore={this.state.articles.length !== this.state.totalResults}
-                    loader={<InfiniteSpinner />}
+                    hasMore={this.state.articles?.length !== this.state.totalResults}
+                    loader={this.state.articles?.length <= this.state.totalResults && <InfiniteSpinner />}
+
+
+                // loader={this.state.totalResults >= this.state.articles?.length && <InfiniteSpinner />}
+                // loader={<InfiniteSpinner />}
+
+
                 >
 
                     <div className="container">
