@@ -1,10 +1,10 @@
-# Daily News App
+# DailyNews App
 
 
 
 ## Description
 
-The Daily News App is a web application built using React that allows users to stay updated with the latest news from various categories such as politics, business, technology, sports, and entertainment. The app fetches real-time news data from the [NewsAPI](https://newsapi.org/) and presents it in an organized and user-friendly format.
+The Daily NewsApp is a web application built using React that allows users to stay updated with the latest news from various categories such as politics, business, technology, sports, and entertainment. The app fetches real-time news data from the [NewsAPI](https://newsapi.org/) and presents it in an organized and user-friendly format.
 
 ## Features
 
