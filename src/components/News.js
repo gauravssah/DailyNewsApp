@@ -290,10 +290,11 @@ export class News extends Component {
             articles: [],
             loading: false,
             page: 1,
-            apiKay: "f72b5e7032864ee38a21559ab0561744",
+            // apiKay: "f72b5e7032864ee38a21559ab0561744",
             // apiKay: "809ff72368874be4ab94ce7845ea6708",
             // apiKay: "74cced90f2fe4c18b6b482f0cca82a9b",
             // apiKay: "05332ad97bac4326a5f9982c84674662",
+            apiKay: "3b1037bd79174faca6805a9d2c50bc8f",
             totalResults: 0,
         }
 
@@ -346,6 +347,13 @@ export class News extends Component {
         return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
     }
 
+    topFunction = () => {
+        console.log("top")
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
+
     render() {
         return (
             < >
@@ -368,7 +376,7 @@ export class News extends Component {
 
                 >
 
-                    <div className="container">
+                    <div className="container mb-4 position-relative">
 
                         <div className="row mb-4 " >
                             {this.state.articles?.map((elements) => {
@@ -385,7 +393,13 @@ export class News extends Component {
                                     <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} source={elements.source.name} />
                                 </div>
                             })}
+
                         </div>
+
+
+
+                        {(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) && <button className='btnfortop' onClick={this.topFunction} id="myBtn" title="Go to top"  >Top &uarr; </button>
+                        }
 
                     </div>
 

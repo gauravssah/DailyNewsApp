@@ -1,0 +1,13 @@
+.btnfortop {
+    background-color: orange;
+    position: fixed;
+    bottom: 22px;
+    right: 23px;
+    padding: 2px 9px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.btnfortop:hover {
+    opacity: 0.8;
+}

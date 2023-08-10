@@ -1,4 +1,3 @@
-
 # DailyNewsApp using React
 
 This is a simple news app built using React that fetches and displays top headlines from various news sources. The app utilizes the NewsAPI to retrieve news articles based on the selected category and country.
