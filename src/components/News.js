@@ -392,6 +392,7 @@ export class News extends Component {
                                     elements.description = "Title Not Available..."
                                 }
 
+
                                 return <div className="col md-3 my-3 d-flex justify-content-center" key={elements.url}>
                                     <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} source={elements.source.name} />
                                 </div>
