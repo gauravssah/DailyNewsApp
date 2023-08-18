@@ -2,17 +2,9 @@ import React from 'react'
 
 const NewsItem = (props) => {
 
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         defaultImage: 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg',
-    //     };
-    // }
-
-    // replaceImage = (error) => {
-    //     //replacement of broken Image
-    //     error.target.src = this.state.defaultImage;
-    // }
+    const replaceImage = (error) => {
+        error.target.src = 'https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg';
+    }
 
     let { title, description, imageurl, newsUrl, publishedAt, author, source } = props;
 
@@ -21,7 +13,7 @@ const NewsItem = (props) => {
             <div className="card" style={{ width: "18rem", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}>
                 <span className=" newspublishername badge rounded-pill bg-danger text-light" style={{ zIndex: "1", position: "absolute", right: "-10px", top: "-8px", fontWeight: "bold" }}>
                     {source}</span>
-                <img src={imageurl} className="card-img-top" style={{ maxHeight: "10rem", minHeight: "10rem" }} alt="image" />
+                <img src={imageurl} className="card-img-top" style={{ maxHeight: "10rem", minHeight: "10rem" }} alt="image" onError={replaceImage} />
                 <div className="card-body" style={{ maxHeight: "18rem", minHeight: "18rem" }}>
                     <h5 className="card-title">{title}</h5>
                     <p className="card-text">{description}</p>
