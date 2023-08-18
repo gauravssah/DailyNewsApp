@@ -293,15 +293,21 @@ const News = (props) => {
 
     useEffect(() => {
         updateNews();
+        if (props.category === "general") {
+            document.title = "DailyNews: Your Source for Real-Time Updates on Politics, Business, Technology, Sports, and Entertainment"
+        } else {
+            document.title = `${textCaptlize(props.category)} - DailyNews`;
+        }
     }, [])
 
 
     const fetchMoreData = async () => {
+
+        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page + 1}&pagesize=${props.pagesize}`;
         setPage(page + 1)
-        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pagesize=${props.pagesize}`;
         let data = await fetch(url);
         let parsedData = await data.json();
-        console.log(parsedData)
+        // console.log(parsedData)
         setArticles(articles.concat(parsedData.articles))
         setTotalResults(parsedData.totalResults)
     }
@@ -317,11 +323,7 @@ const News = (props) => {
         document.documentElement.scrollTop = 0;
     }
 
-    if (props.category === "general") {
-        document.title = "DailyNews: Your Source for Real-Time Updates on Politics, Business, Technology, Sports, and Entertainment"
-    } else {
-        document.title = `${textCaptlize(props.category)} - DailyNews`;
-    }
+
 
 
     return (
