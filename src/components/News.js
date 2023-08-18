@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import NewsItem from './NewsItem'
 import Spinner from './Spinner'
 import PropTypes from 'prop-types'
@@ -6,7 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import InfiniteSpinner from './InfiniteSpinner';
 
 
-export class News extends Component {
+const News = (props) => {
 
     // articles = [
     //     {
@@ -272,151 +272,116 @@ export class News extends Component {
 
     // ]
 
-    static defaultProps = {
-        country: "in",
-        pagesize: 8,
-        category: "general",
-    }
+    const [articles, setArticles] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
+    const [totalResults, setTotalResults] = useState(0)
 
-    static propTypes = {
-        country: PropTypes.string,
-        pagesize: PropTypes.number,
-        category: PropTypes.string
-    }
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            articles: [],
-            loading: false,
-            page: 1,
-            // apiKay: "f72b5e7032864ee38a21559ab0561744",
-            // apiKay: "809ff72368874be4ab94ce7845ea6708",
-            // apiKay: "74cced90f2fe4c18b6b482f0cca82a9b",
-            // apiKay: "05332ad97bac4326a5f9982c84674662",
-            // apiKay: "3b1037bd79174faca6805a9d2c50bc8f",
-            totalResults: 0,
-        }
-
-        if (this.props.category === "general") {
-            document.title = "DailyNews: Your Source for Real-Time Updates on Politics, Business, Technology, Sports, and Entertainment"
-        } else {
-            document.title = `${this.textCaptlize(this.props.category)} - DailyNews`;
-        }
-
-
-    }
-
-    async updateNews() {
-        this.props.setProgress(10);
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pagesize=${this.props.pagesize}`;
-        this.setState({ loading: true })
+    const updateNews = async () => {
+        props.setProgress(10);
+        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pagesize=${props.pagesize}`;
+        setLoading(true)
         let data = await fetch(url);
-        this.props.setProgress(30);
+        props.setProgress(30);
         let parsedData = await data.json();
-        // this.props.setProgress(70);
-        // console.log("from updatenews " + url)
-        this.setState({
-            articles: parsedData.articles,
-            totalResults: parsedData.totalResults,
-            loading: false,
-        })
-        this.props.setProgress(100);
-        // console.log("from updatenews length " + this.state.articles.length)
+        setArticles(parsedData.articles)
+        setTotalResults(parsedData.totalResults)
+        setLoading(false)
+        props.setProgress(100);
+
     }
 
-    async componentDidMount() {
-        this.updateNews();
-    }
+    useEffect(() => {
+        updateNews();
+    }, [])
 
-    fetchMoreData = async () => {
-        this.setState({ page: this.state.page + 1 });
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pagesize=${this.props.pagesize}`;
 
+    const fetchMoreData = async () => {
+        setPage(page + 1)
+        const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${page}&pagesize=${props.pagesize}`;
         let data = await fetch(url);
         let parsedData = await data.json();
         console.log(parsedData)
-        this.setState({
-            articles: this.state.articles.concat(parsedData.articles),
-            totalResults: parsedData.totalResults,
-
-        })
-        // console.log("from fetchMoreData length " + this.state.articles.length)
-        // console.log("from fetchMoreData totalResults - " + this.state.totalResults)
+        setArticles(articles.concat(parsedData.articles))
+        setTotalResults(parsedData.totalResults)
     }
 
-    textCaptlize = (word) => {
+    const textCaptlize = (word) => {
         let lowerCase = word.toLowerCase();
         return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
     }
 
-    topFunction = () => {
-        console.log("top")
+    const topFunction = () => {
+        // console.log("top")
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     }
 
-
-    render() {
-        return (
-            < >
-
-                <h2 className='my-3 text-center'>{this.props.category === "general" ? "DailyNews - Top Headlines" : `DailyNews - Top Headlines of
-                 ${this.textCaptlize(this.props.category)}`} </h2>
-
-                {this.state.loading && <Spinner />}
-
-                <InfiniteScroll
-                    dataLength={this.state.articles?.length}
-                    next={this.fetchMoreData}
-                    hasMore={this.state.articles?.length !== this.state.totalResults}
-                    loader={this.state.articles?.length <= this.state.totalResults && <InfiniteSpinner />}
+    if (props.category === "general") {
+        document.title = "DailyNews: Your Source for Real-Time Updates on Politics, Business, Technology, Sports, and Entertainment"
+    } else {
+        document.title = `${textCaptlize(props.category)} - DailyNews`;
+    }
 
 
-                // loader={this.state.totalResults >= this.state.articles?.length && <InfiniteSpinner />}
-                // loader={<InfiniteSpinner />}
+    return (
+        < >
+
+            <h2 className='my-3 text-center'>{props.category === "general" ? "DailyNews - Top Headlines" : `DailyNews - Top Headlines of
+                 ${textCaptlize(props.category)}`} </h2>
+
+            {loading && <Spinner />}
+
+            <InfiniteScroll
+                dataLength={articles?.length}
+                next={fetchMoreData}
+                hasMore={articles?.length !== totalResults}
+                loader={articles?.length <= totalResults && <InfiniteSpinner />}
+            >
+
+                <div className="container mb-4 position-relative">
+
+                    <div className="row mb-4 " >
+                        {articles?.map((elements) => {
+
+                            if (elements.description === null) {
+                                elements.description = "Description Not Available..."
+                            }
+
+                            if (elements.title === null) {
+                                elements.description = "Title Not Available..."
+                            }
 
 
-                >
-
-                    <div className="container mb-4 position-relative">
-
-                        <div className="row mb-4 " >
-                            {this.state.articles?.map((elements) => {
-
-                                if (elements.description === null) {
-                                    elements.description = "Description Not Available..."
-                                }
-
-                                if (elements.title === null) {
-                                    elements.description = "Title Not Available..."
-                                }
-
-
-                                return <div className="col md-3 my-3 d-flex justify-content-center" key={elements.url}>
-                                    <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} source={elements.source.name} />
-                                </div>
-                            })}
-
-                        </div>
-
-
-
-                        {(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) && <button className='btnfortop' onClick={this.topFunction} id="myBtn" title="Go to top"  >Top &uarr; </button>
-                        }
+                            return <div className="col md-3 my-3 d-flex justify-content-center" key={elements.url}>
+                                <NewsItem title={elements.title.length > "36" ? elements.title.slice(0, 36) + "..." : elements.title} description={elements.description?.length > "100" ? elements.description.slice(0, 100) + "..." : elements.description} imageurl={elements.urlToImage === null ? "https://icon-library.com/images/no-picture-available-icon/no-picture-available-icon-1.jpg" : elements.urlToImage} newsUrl={elements.url} author={elements.author === null ? "Unknown" : elements.author} publishedAt={elements.publishedAt} source={elements.source.name} />
+                            </div>
+                        })}
 
                     </div>
 
-                </InfiniteScroll>
+                    {(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) && <button className='btnfortop' onClick={topFunction} id="myBtn" title="Go to top"  >Top &uarr; </button>
+                    }
 
+                </div>
 
+            </InfiniteScroll>
 
+        </>
+    )
 
+}
 
+News.defaultProps = {
+    country: "in",
+    pagesize: 8,
+    category: "general",
+}
 
-            </>
-        )
-    }
+News.propTypes = {
+    country: PropTypes.string,
+    pagesize: PropTypes.number,
+    category: PropTypes.string
 }
 
 export default News
